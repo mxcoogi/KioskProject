@@ -3,8 +3,14 @@ package org.example;
 import java.util.Scanner;
 
 public class Main {
+
     public static void main(String[] args) {
 
+        /**
+         * @author : mxcoogi
+         * @version : lv1
+         *
+         */
         Scanner scanner = new Scanner(System.in);
         String burger1 = "ShackBurger   | W 6.9 | 토마토, 양상추, 쉑소스가 토핑된 치즈버거";
         String burger2 = "SmokeShack    | W 8.9 | 베이컨, 체리 페퍼에 쉑소스가 토핑된 치즈버거";
