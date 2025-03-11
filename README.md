@@ -88,10 +88,9 @@ ___
 ___
 ### Git Flow
 
-- main : 서비스 직접 배포하는 브랜치
-- develop : feature에서 개발된 내용을 가지는 브랜치
-- feature : 기능을 개발하는 브랜치 **feature/{기능요약}**
-  ![img.png](image/img.png)
+- main : 최종 레벨 브런치
+- lv n : 각 레벨 브런치 메인브런치에서 lv 브런치를 만든다
+- lv n develop : 각 레벨의 개발 브런치 개발을 마치고 lv브런치와 병합
 ___
 ## Commit Message Convention
 Udacity 의 Commit Convention
@@ -128,3 +127,10 @@ ___
 - Footer (꼬리말)은 이슈 트래커의 ID를 작성한다.
 - 어떤 이슈와 관련된 커밋인지(Resolves), 그 외 참고할 사항이 있는지(See also)로 작성하면 좋다.
 ___
+
+## Feedback Reflection Checklist
+- [ ] equalsIgnoreCase 
+- [ ] System.exit() 지양
+- [ ] 메서드 네이밍 길어져도 직관적으로
+- [ ] 하드코딩 -> 상수로 대체
+- [ ] 주석 java docs
