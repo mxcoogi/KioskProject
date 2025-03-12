@@ -12,7 +12,7 @@ import java.util.Stack;
  * @author mxcoogi
  * @version thread Version
  */
-public class Kiosk{
+public class Kiosk {
     /**
      * 메뉴를 저장하는 MenuList
      * 입력받는 Scanner
@@ -21,7 +21,7 @@ public class Kiosk{
      */
     private List<Menu> menuList;
     private static Scanner scanner = new Scanner(System.in);
-    private static Stack<Runnable> stack= new Stack<>();
+    private static Stack<Runnable> stack = new Stack<>();
     private static String input;
 
 
@@ -70,7 +70,7 @@ public class Kiosk{
     public void start() {
         stack.push(showFirst());
         try {
-            while(true){
+            while (true) {
                 Runnable function = stack.pop();
                 function.run();
             }
@@ -83,31 +83,33 @@ public class Kiosk{
      * 메뉴보기 장바구니 주문하기 선택지를 보여줍니다<br>
      * 함수가 실행되면 현재 함수와 다음함수 스택에 저장<br>
      * 메서드명 작문이 애매합니다
+     *
      * @return Runnable 구현한 함수 반환
      */
-    public Runnable showFirst(){
+    public Runnable showFirst() {
         return new Runnable() {
             @Override
             public void run() {
                 System.out.println("1. 메뉴   2. 장바구니   3. 주문하기   0. 종료");
-                try{
+                try {
                     input = scanner.nextLine();
-                    switch (input){
-                        case "1" ->{
+                    switch (input) {
+                        case "1" -> {
                             stack.push(showFirst());
                             stack.push(showMenuList());
                         }
-                        case "2"->{
+                        case "2" -> {
                             stack.push(showFirst());
                             stack.push(showCartList());
                         }
-                        case "3"->{
+                        case "3" -> {
                             stack.push(showFirst());
-                            System.out.println("주문하기 구현 안함");
+                            stack.push(payOrder());
                         }
-                        case "0"->{
+                        case "0" -> {
+
                         }
-                        default ->{
+                        default -> {
                             throw new NumberFormatException();
                         }
                     }
@@ -163,14 +165,14 @@ public class Kiosk{
         return new Runnable() {
             @Override
             public void run() {
-                Menu menu = menuList.get(Integer.parseInt(input)-1);
+                Menu menu = menuList.get(Integer.parseInt(input) - 1);
                 menu.showMenuItems();
                 String temp = scanner.nextLine();
                 if (temp.equals("0")) {
 
                 } else {
                     try {
-                        int idx = Integer.parseInt(temp)-1;
+                        int idx = Integer.parseInt(temp) - 1;
                         MenuItem menuItem = menu.getMenuItems().get(idx);
                         System.out.println(menuItem.toString());
                         addCartList(menuItem);
@@ -186,9 +188,10 @@ public class Kiosk{
 
     /**
      * showMenuItems 의해서만 작동하는 함수
+     *
      * @param menuItem 선택한 메뉴아이템을 받아 장바구니에 저장
      */
-    private void addCartList(MenuItem menuItem){
+    private void addCartList(MenuItem menuItem) {
         System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
         System.out.println("1. 확인        2. 취소");
         String temp = scanner.nextLine();
@@ -208,13 +211,47 @@ public class Kiosk{
 
     /**
      * 장바구니에 담긴 목록을 보여줌
+     *
      * @return Runnable
      */
-    private Runnable showCartList(){
+    private Runnable showCartList() {
         return new Runnable() {
             @Override
             public void run() {
                 Cart.showCartList();
+            }
+        };
+    }
+
+
+    /**
+     * 주문하는 메서드
+     *
+     * @return Runnable
+     */
+    private Runnable payOrder() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Cart.showCartList();
+                    System.out.println("1. 주문하기   0. 뒤로가기");
+                    String temp = scanner.nextLine();
+                    switch (temp) {
+                        case "1" -> {
+                            Cart.payOrder();
+                        }
+                        case "0" -> {
+
+                        }
+                        default -> {
+                            throw new Exception();
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
             }
         };
     }
