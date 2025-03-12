@@ -35,4 +35,29 @@ public class MenuItem {
     public String toString() {
         return String.format("%-20s | W %-5.1f | %s", name, price / 1000.0, description);
     }
+
+
+    /**
+     * 아이템 이름
+     * @return String
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 아이템 가격
+     * @return int
+     */
+    public int getPrice() {
+        return price;
+    }
+
+    /**
+     * 아이템 설명
+     * @return String
+     */
+    public String getDescription() {
+        return description;
+    }
 }

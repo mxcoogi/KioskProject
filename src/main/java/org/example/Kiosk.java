@@ -18,6 +18,7 @@ public class Kiosk{
     private static Stack<Runnable> stack= new Stack<>();
     private static String input;
 
+
     /**
      * 생성자<br>
      * 생성시 menuItem, ArrayList 할당<br>
@@ -60,7 +61,7 @@ public class Kiosk{
      * 키오스크 프로그램을 시작하는 메서드
      */
     public void start() {
-        stack.push(showMenuList());
+        stack.push(showFirst());
         try {
             while(true){
                 Runnable function = stack.pop();
@@ -69,6 +70,48 @@ public class Kiosk{
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    /**
+     * 메뉴보기 장바구니 주문하기 선택지를 보여줍니다<br>
+     * 메서드명 작문이 애매합니다
+     */
+    public Runnable showFirst(){
+
+        Runnable showFirst = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("1. 메뉴   2. 장바구니   3. 주문하기   0. 종료");
+                try{
+                    input = scanner.nextLine();
+                    switch (input){
+                        case "1" ->{
+                            stack.push(showFirst());
+                            stack.push(showMenuList());
+                        }
+                        case "2"->{
+                            stack.push(showFirst());
+                            stack.push(showCartList());
+                        }
+                        case "3"->{
+                            stack.push(showFirst());
+                            System.out.println("주문하기 구현 안함");
+                        }
+                        case "0"->{
+                        }
+                        default ->{
+                            throw new NumberFormatException();
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        };
+
+
+        return showFirst;
     }
 
 
@@ -81,20 +124,19 @@ public class Kiosk{
      * @throws IndexOutOfBoundsException
      */
     private Runnable showMenuList() {
-        Runnable showMenuList = new Runnable() {
+        return new Runnable() {
             @Override
             public void run() {
                 System.out.println("[ MAIN MENU ]");
                 for (int i = 0; i < menuList.size(); i++) {
                     System.out.println(i + 1 + ". " + menuList.get(i).getCategory());
                 }
-                System.out.println("0. 종료");
+                System.out.println("0. 뒤로가기");
                 input = scanner.nextLine();
                 if (input.equals("0")) {
-                    throw new RuntimeException("종료합니다");
+
                 } else {
                     try {
-                        int idx = Integer.parseInt(input);
                         stack.push(showMenuList());
                         stack.push(showMenuItems());
                     } catch (NumberFormatException e) {
@@ -105,7 +147,6 @@ public class Kiosk{
                 }
             }
         };
-        return showMenuList;
     }
 
 
@@ -115,19 +156,20 @@ public class Kiosk{
      */
     private Runnable showMenuItems() {
 
-        Runnable showMenuItems = new Runnable() {
+        return new Runnable() {
             @Override
             public void run() {
                 Menu menu = menuList.get(Integer.parseInt(input)-1);
                 menu.showMenuItems();
                 String temp = scanner.nextLine();
-                if (input.equals("0")) {
+                if (temp.equals("0")) {
 
                 } else {
                     try {
-                        int idx = Integer.parseInt(temp);
-                        System.out.println(menu.getMenuItems().get(idx - 1).toString());
-
+                        int idx = Integer.parseInt(temp)-1;
+                        MenuItem menuItem = menu.getMenuItems().get(idx);
+                        System.out.println(menuItem.toString());
+                        addCartList(menuItem);
                     } catch (NumberFormatException e) {
                         throw new NumberFormatException("잘못된 입력입니다!");
                     } catch (IndexOutOfBoundsException e) {
@@ -136,8 +178,35 @@ public class Kiosk{
                 }
             }
         };
-    return showMenuItems;
     }
+
+    private void addCartList(MenuItem menuItem){
+        System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
+        System.out.println("1. 확인        2. 취소");
+        String temp = scanner.nextLine();
+        switch (temp) {
+            case "1" -> {
+                Cart.addMenuItem(menuItem);
+            }
+            case "2" -> {
+                System.out.println("취소합니다.");
+            }
+            default -> {
+                throw new NumberFormatException();
+            }
+        }
+    }
+
+    private Runnable showCartList(){
+        return new Runnable() {
+            @Override
+            public void run() {
+                Cart.showCartList();
+            }
+        };
+    }
+
+
 
 
 }
