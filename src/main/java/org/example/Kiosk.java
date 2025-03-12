@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * @author mxcoogi
- * @version lv3
  * 키오스크 클래스로 사용자의 입력을 처리하고<br>
  * List에 MenuItem을 저장하고 있습니다.
+ * @author mxcoogi
+ * @version lv3
  */
 public class Kiosk {
     private List<MenuItem> menuItems;
@@ -16,7 +16,7 @@ public class Kiosk {
 
     /**
      * 생성자<br>
-     * 생성시 menuItem ArrayList 할당<br>
+     * 생성시 menuItem, ArrayList 할당<br>
      * init 함수 실행
      */
     public Kiosk() {
@@ -24,8 +24,10 @@ public class Kiosk {
         init();
     }
 
+
     /**
      * 초기 세팅 키오스크 List에 menuItem 넣어줌
+     *
      */
     private void init() {
         menuItems.add(new MenuItem("ShackBurger", 6900, "토마토, 양상추, 쉑소스가 토핑된 치즈버거"));
@@ -34,18 +36,25 @@ public class Kiosk {
         menuItems.add(new MenuItem("Hamburger", 5400, "비프패티를 기반으로 야채가 들어간 기본버거"));
     }
 
+
     /**
      * 키오스크 프로그램을 시작하는 메서드
      */
     public void start() {
-        while (true) {
-            showMenuItems();
-            showMenuItemDescription();
+        try {
+            while (true) {
+                showMenuItems();
+                showMenuItemDescription();
+            }
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
 
+
     /**
      * 키오스크의 전체 메뉴를 보여주는 메서드
+     *
      */
     private void showMenuItems() {
         System.out.println("[ SHAKESHACK MENU ]");
@@ -56,11 +65,13 @@ public class Kiosk {
         System.out.println("0. 종료");
     }
 
+
     /**
      * 키오스크 메뉴를 선택하면 정보를  출력해주는 메소드
      * @throws RuntimeException 0입력시 종료시킴
      * @throws NumberFormatException 잘못된 숫자 입력
      * @throws IndexOutOfBoundsException 범위를 넘어가는 숫자 입력
+     *
      */
     private void showMenuItemDescription() {
         String input = scanner.nextLine();
