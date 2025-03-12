@@ -3,6 +3,7 @@ package org.example;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Stack;
 
 /**
  * 키오스크 클래스로 사용자의 입력을 처리하고<br>
@@ -11,9 +12,10 @@ import java.util.Scanner;
  * @author mxcoogi
  * @version lv3
  */
-public class Kiosk {
+public class Kiosk{
     private List<Menu> menuList;
     private static Scanner scanner = new Scanner(System.in);
+    private static Stack<Runnable> stack= new Stack<>();
 
     /**
      * 생성자<br>
@@ -58,11 +60,12 @@ public class Kiosk {
      */
     public void start() {
         try {
-            int select;
-            while (true) {
+            while(true){
+                int select;
                 select = showMenuList();
                 select = showMenuItems(select);
             }
+
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -111,7 +114,7 @@ public class Kiosk {
         menu.showMenuItems();
         String input = scanner.nextLine();
         if (input.equals("0")) {
-            throw new RuntimeException("종료합니다");
+
         } else {
             try {
                 int idx = Integer.parseInt(input);
