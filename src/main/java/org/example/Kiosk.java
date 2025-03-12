@@ -7,11 +7,12 @@ import java.util.Scanner;
 /**
  * 키오스크 클래스로 사용자의 입력을 처리하고<br>
  * List에 MenuItem을 저장하고 있습니다.
+ *
  * @author mxcoogi
  * @version lv3
  */
 public class Kiosk {
-    private List<MenuItem> menuItems;
+    private List<Menu> menuList;
     private static Scanner scanner = new Scanner(System.in);
 
     /**
@@ -20,20 +21,21 @@ public class Kiosk {
      * init 함수 실행
      */
     public Kiosk() {
-        menuItems = new ArrayList<>();
+        menuList = new ArrayList<>();
         init();
     }
 
 
     /**
      * 초기 세팅 키오스크 List에 menuItem 넣어줌
-     *
      */
     private void init() {
-        menuItems.add(new MenuItem("ShackBurger", 6900, "토마토, 양상추, 쉑소스가 토핑된 치즈버거"));
-        menuItems.add(new MenuItem("SmokeShack", 8900, "베이컨, 체리 페퍼에 쉑소스가 토핑된 치즈버거"));
-        menuItems.add(new MenuItem("Cheeseburger", 6900, "포테이토 번과 비프패티, 치즈가 토핑된 치즈버거"));
-        menuItems.add(new MenuItem("Hamburger", 5400, "비프패티를 기반으로 야채가 들어간 기본버거"));
+        Menu burger = new Menu("burger");
+        burger.addMenuItem(new MenuItem("ShackBurger", 6900, "토마토, 양상추, 쉑소스가 토핑된 치즈버거"));
+        burger.addMenuItem(new MenuItem("SmokeShack", 8900, "베이컨, 체리 페퍼에 쉑소스가 토핑된 치즈버거"));
+        burger.addMenuItem(new MenuItem("Cheeseburger", 6900, "포테이토 번과 비프패티, 치즈가 토핑된 치즈버거"));
+        burger.addMenuItem(new MenuItem("Hamburger", 5400, "비프패티를 기반으로 야채가 들어간 기본버거"));
+        menuList.add(burger);
     }
 
 
@@ -42,9 +44,10 @@ public class Kiosk {
      */
     public void start() {
         try {
+            int select;
             while (true) {
-                showMenuItems();
-                showMenuItemDescription();
+                select = showMenuList();
+                select = showMenuItems(select);
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -53,40 +56,59 @@ public class Kiosk {
 
 
     /**
-     * 키오스크의 전체 메뉴를 보여주는 메서드
+     * 키오스크의 전체 메뉴 카테고리를 보여주는 메서드<br>
+     * 메뉴 카테고리를 번호를 선택한다
      *
+     * @return 선택한 메뉴 카테고리의 번호를 리턴
+     * @throws NumberFormatException
+     * @throws IndexOutOfBoundsException
      */
-    private void showMenuItems() {
+    private int showMenuList() {
         System.out.println("[ SHAKESHACK MENU ]");
-        for (int i = 0; i < menuItems.size(); i++) {
-            MenuItem item = menuItems.get(i);
-            System.out.println(i + 1 + ". " + item.toString());
+        for (int i = 0; i < menuList.size(); i++) {
+            System.out.println(i + 1 + ". " + menuList.get(i).getCategory());
         }
         System.out.println("0. 종료");
-    }
-
-
-    /**
-     * 키오스크 메뉴를 선택하면 정보를  출력해주는 메소드
-     * @throws RuntimeException 0입력시 종료시킴
-     * @throws NumberFormatException 잘못된 숫자 입력
-     * @throws IndexOutOfBoundsException 범위를 넘어가는 숫자 입력
-     *
-     */
-    private void showMenuItemDescription() {
         String input = scanner.nextLine();
+        int idx;
         if (input.equals("0")) {
             throw new RuntimeException("종료합니다");
         } else {
             try {
-                int idx = Integer.parseInt(input);
-                System.out.println(menuItems.get(idx - 1).toString());
+                idx = Integer.parseInt(input);
             } catch (NumberFormatException e) {
                 throw new NumberFormatException("잘못된 입력입니다!");
             } catch (IndexOutOfBoundsException e) {
                 throw new IndexOutOfBoundsException("없는 메뉴입니다!");
             }
         }
+        return idx - 1;
     }
+
+    /**
+     * 선택한 메뉴 카테고리의 리스트를 보여주는 메서드
+     *
+     * @param select 이전에 선택한 메뉴 카테고리의 번호를 파라미터로 받는다
+     * @return 메뉴의 아이템의 번호를 리턴한다
+     */
+    private int showMenuItems(int select) {
+        Menu menu = menuList.get(select);
+        menu.showMenuItems();
+        String input = scanner.nextLine();
+        if (input.equals("0")) {
+            throw new RuntimeException("종료합니다");
+        } else {
+            try {
+                int idx = Integer.parseInt(input);
+                System.out.println(menu.getMenuItems().get(idx - 1).toString());
+            } catch (NumberFormatException e) {
+                throw new NumberFormatException("잘못된 입력입니다!");
+            } catch (IndexOutOfBoundsException e) {
+                throw new IndexOutOfBoundsException("없는 메뉴입니다!");
+            }
+        }
+        return select;
+    }
+
 
 }
