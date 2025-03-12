@@ -36,6 +36,20 @@ public class Kiosk {
         burger.addMenuItem(new MenuItem("Cheeseburger", 6900, "포테이토 번과 비프패티, 치즈가 토핑된 치즈버거"));
         burger.addMenuItem(new MenuItem("Hamburger", 5400, "비프패티를 기반으로 야채가 들어간 기본버거"));
         menuList.add(burger);
+
+        Menu drink = new Menu("drink");
+        drink.addMenuItem(new MenuItem("Fresh Lemonade", 3500, "신선한 레몬과 설탕으로 만든 상큼한 레모네이드"));
+        drink.addMenuItem(new MenuItem("Iced Tea", 2900, "시원한 아이스티, 달콤한 맛!!"));
+        drink.addMenuItem(new MenuItem("Milkshake", 4900, "부드럽고 크리미한 초코, 바닐라, 딸기 밀크쉐이크"));
+        drink.addMenuItem(new MenuItem("Coke", 2000, "클래식 콜라, 다이어트 콜라, 제로 콜라 선택 가능"));
+        menuList.add(drink);
+
+        Menu dessert = new Menu("dessert");
+        dessert.addMenuItem(new MenuItem("Chocolate Brownie", 3000, "촉촉한 초콜릿 브라우니와 바닐라 아이스크림"));
+        dessert.addMenuItem(new MenuItem("Apple Pie", 3200, "따뜻한 애플 파이와 달콤한 시나몬 향!!"));
+        dessert.addMenuItem(new MenuItem("Vanilla Custard", 2500, "부드러운 바닐라 커스터드와 과일 토핑"));
+        dessert.addMenuItem(new MenuItem("Cheesecake", 4000, "고소하고 부드러운 뉴욕 스타일 치즈케이크"));
+        menuList.add(dessert);
     }
 
 
@@ -64,7 +78,7 @@ public class Kiosk {
      * @throws IndexOutOfBoundsException
      */
     private int showMenuList() {
-        System.out.println("[ SHAKESHACK MENU ]");
+        System.out.println("[ MAIN MENU ]");
         for (int i = 0; i < menuList.size(); i++) {
             System.out.println(i + 1 + ". " + menuList.get(i).getCategory());
         }
@@ -84,6 +98,7 @@ public class Kiosk {
         }
         return idx - 1;
     }
+
 
     /**
      * 선택한 메뉴 카테고리의 리스트를 보여주는 메서드

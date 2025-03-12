@@ -28,6 +28,7 @@ public class Menu {
      * 이 카테고리에 해당하는 메뉴리스트를 보여줌
      */
     public void showMenuItems() {
+        System.out.printf("[ %s MENU ]\n", category.toUpperCase());
         for (int i = 0; i < menuItems.size(); i++) {
             MenuItem item = menuItems.get(i);
             System.out.println(i + 1 + ". " + item.toString());
