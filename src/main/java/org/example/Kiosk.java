@@ -10,9 +10,15 @@ import java.util.Stack;
  * List에 MenuItem을 저장하고 있습니다.
  *
  * @author mxcoogi
- * @version lv3
+ * @version thread Version
  */
 public class Kiosk{
+    /**
+     * 메뉴를 저장하는 MenuList
+     * 입력받는 Scanner
+     * 이전 함수(콘솔에 보여지는 화면을 담당하는)를 기록하는 stack
+     * 명령어를 저장하는 input
+     */
     private List<Menu> menuList;
     private static Scanner scanner = new Scanner(System.in);
     private static Stack<Runnable> stack= new Stack<>();
@@ -59,6 +65,7 @@ public class Kiosk{
 
     /**
      * 키오스크 프로그램을 시작하는 메서드
+     * 함수스택에 쌓여있는 걸 제거하고 실행시킨다
      */
     public void start() {
         stack.push(showFirst());
@@ -74,11 +81,12 @@ public class Kiosk{
 
     /**
      * 메뉴보기 장바구니 주문하기 선택지를 보여줍니다<br>
+     * 함수가 실행되면 현재 함수와 다음함수 스택에 저장<br>
      * 메서드명 작문이 애매합니다
+     * @return Runnable 구현한 함수 반환
      */
     public Runnable showFirst(){
-
-        Runnable showFirst = new Runnable() {
+        return new Runnable() {
             @Override
             public void run() {
                 System.out.println("1. 메뉴   2. 장바구니   3. 주문하기   0. 종료");
@@ -109,9 +117,6 @@ public class Kiosk{
 
             }
         };
-
-
-        return showFirst;
     }
 
 
@@ -152,7 +157,6 @@ public class Kiosk{
 
     /**
      * 선택한 메뉴 카테고리의 리스트를 보여주는 메서드
-     *
      */
     private Runnable showMenuItems() {
 
@@ -180,6 +184,10 @@ public class Kiosk{
         };
     }
 
+    /**
+     * showMenuItems 의해서만 작동하는 함수
+     * @param menuItem 선택한 메뉴아이템을 받아 장바구니에 저장
+     */
     private void addCartList(MenuItem menuItem){
         System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
         System.out.println("1. 확인        2. 취소");
@@ -197,6 +205,11 @@ public class Kiosk{
         }
     }
 
+
+    /**
+     * 장바구니에 담긴 목록을 보여줌
+     * @return Runnable
+     */
     private Runnable showCartList(){
         return new Runnable() {
             @Override
@@ -205,8 +218,6 @@ public class Kiosk{
             }
         };
     }
-
-
 
 
 }

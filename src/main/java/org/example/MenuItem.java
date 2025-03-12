@@ -2,7 +2,7 @@ package org.example;
 
 /**
  * 개별 음식 항목을 관리하는 클래스<br>
- * 현재(lv2)는 햄버거만 관리한다<br>
+ *
  *
  * @author mxcoogi
  * @version lv2
