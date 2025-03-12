@@ -3,17 +3,27 @@ package org.example;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Stack;
 
 /**
  * 키오스크 클래스로 사용자의 입력을 처리하고<br>
  * List에 MenuItem을 저장하고 있습니다.
  *
  * @author mxcoogi
- * @version lv3
+ * @version thread Version
  */
-public class Kiosk {
+public class Kiosk{
+    /**
+     * 메뉴를 저장하는 MenuList
+     * 입력받는 Scanner
+     * 이전 함수(콘솔에 보여지는 화면을 담당하는)를 기록하는 stack
+     * 명령어를 저장하는 input
+     */
     private List<Menu> menuList;
     private static Scanner scanner = new Scanner(System.in);
+    private static Stack<Runnable> stack= new Stack<>();
+    private static String input;
+
 
     /**
      * 생성자<br>
@@ -55,17 +65,58 @@ public class Kiosk {
 
     /**
      * 키오스크 프로그램을 시작하는 메서드
+     * 함수스택에 쌓여있는 걸 제거하고 실행시킨다
      */
     public void start() {
+        stack.push(showFirst());
         try {
-            int select;
-            while (true) {
-                select = showMenuList();
-                select = showMenuItems(select);
+            while(true){
+                Runnable function = stack.pop();
+                function.run();
             }
         } catch (Exception e) {
             System.out.println(e);
         }
+    }
+
+    /**
+     * 메뉴보기 장바구니 주문하기 선택지를 보여줍니다<br>
+     * 함수가 실행되면 현재 함수와 다음함수 스택에 저장<br>
+     * 메서드명 작문이 애매합니다
+     * @return Runnable 구현한 함수 반환
+     */
+    public Runnable showFirst(){
+        return new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("1. 메뉴   2. 장바구니   3. 주문하기   0. 종료");
+                try{
+                    input = scanner.nextLine();
+                    switch (input){
+                        case "1" ->{
+                            stack.push(showFirst());
+                            stack.push(showMenuList());
+                        }
+                        case "2"->{
+                            stack.push(showFirst());
+                            stack.push(showCartList());
+                        }
+                        case "3"->{
+                            stack.push(showFirst());
+                            System.out.println("주문하기 구현 안함");
+                        }
+                        case "0"->{
+                        }
+                        default ->{
+                            throw new NumberFormatException();
+                        }
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+        };
     }
 
 
@@ -77,52 +128,95 @@ public class Kiosk {
      * @throws NumberFormatException
      * @throws IndexOutOfBoundsException
      */
-    private int showMenuList() {
-        System.out.println("[ MAIN MENU ]");
-        for (int i = 0; i < menuList.size(); i++) {
-            System.out.println(i + 1 + ". " + menuList.get(i).getCategory());
-        }
-        System.out.println("0. 종료");
-        String input = scanner.nextLine();
-        int idx;
-        if (input.equals("0")) {
-            throw new RuntimeException("종료합니다");
-        } else {
-            try {
-                idx = Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                throw new NumberFormatException("잘못된 입력입니다!");
-            } catch (IndexOutOfBoundsException e) {
-                throw new IndexOutOfBoundsException("없는 메뉴입니다!");
+    private Runnable showMenuList() {
+        return new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("[ MAIN MENU ]");
+                for (int i = 0; i < menuList.size(); i++) {
+                    System.out.println(i + 1 + ". " + menuList.get(i).getCategory());
+                }
+                System.out.println("0. 뒤로가기");
+                input = scanner.nextLine();
+                if (input.equals("0")) {
+
+                } else {
+                    try {
+                        stack.push(showMenuList());
+                        stack.push(showMenuItems());
+                    } catch (NumberFormatException e) {
+                        throw new NumberFormatException("잘못된 입력입니다!");
+                    } catch (IndexOutOfBoundsException e) {
+                        throw new IndexOutOfBoundsException("없는 메뉴입니다!");
+                    }
+                }
             }
-        }
-        return idx - 1;
+        };
     }
 
 
     /**
      * 선택한 메뉴 카테고리의 리스트를 보여주는 메서드
-     *
-     * @param select 이전에 선택한 메뉴 카테고리의 번호를 파라미터로 받는다
-     * @return 메뉴의 아이템의 번호를 리턴한다
      */
-    private int showMenuItems(int select) {
-        Menu menu = menuList.get(select);
-        menu.showMenuItems();
-        String input = scanner.nextLine();
-        if (input.equals("0")) {
-            throw new RuntimeException("종료합니다");
-        } else {
-            try {
-                int idx = Integer.parseInt(input);
-                System.out.println(menu.getMenuItems().get(idx - 1).toString());
-            } catch (NumberFormatException e) {
-                throw new NumberFormatException("잘못된 입력입니다!");
-            } catch (IndexOutOfBoundsException e) {
-                throw new IndexOutOfBoundsException("없는 메뉴입니다!");
+    private Runnable showMenuItems() {
+
+        return new Runnable() {
+            @Override
+            public void run() {
+                Menu menu = menuList.get(Integer.parseInt(input)-1);
+                menu.showMenuItems();
+                String temp = scanner.nextLine();
+                if (temp.equals("0")) {
+
+                } else {
+                    try {
+                        int idx = Integer.parseInt(temp)-1;
+                        MenuItem menuItem = menu.getMenuItems().get(idx);
+                        System.out.println(menuItem.toString());
+                        addCartList(menuItem);
+                    } catch (NumberFormatException e) {
+                        throw new NumberFormatException("잘못된 입력입니다!");
+                    } catch (IndexOutOfBoundsException e) {
+                        throw new IndexOutOfBoundsException("없는 메뉴입니다!");
+                    }
+                }
+            }
+        };
+    }
+
+    /**
+     * showMenuItems 의해서만 작동하는 함수
+     * @param menuItem 선택한 메뉴아이템을 받아 장바구니에 저장
+     */
+    private void addCartList(MenuItem menuItem){
+        System.out.println("위 메뉴를 장바구니에 추가하시겠습니까?");
+        System.out.println("1. 확인        2. 취소");
+        String temp = scanner.nextLine();
+        switch (temp) {
+            case "1" -> {
+                Cart.addMenuItem(menuItem);
+            }
+            case "2" -> {
+                System.out.println("취소합니다.");
+            }
+            default -> {
+                throw new NumberFormatException();
             }
         }
-        return select;
+    }
+
+
+    /**
+     * 장바구니에 담긴 목록을 보여줌
+     * @return Runnable
+     */
+    private Runnable showCartList(){
+        return new Runnable() {
+            @Override
+            public void run() {
+                Cart.showCartList();
+            }
+        };
     }
 
 

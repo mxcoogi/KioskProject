@@ -2,7 +2,7 @@ package org.example;
 
 /**
  * 개별 음식 항목을 관리하는 클래스<br>
- * 현재(lv2)는 햄버거만 관리한다<br>
+ *
  *
  * @author mxcoogi
  * @version lv2
@@ -34,5 +34,30 @@ public class MenuItem {
     @Override
     public String toString() {
         return String.format("%-20s | W %-5.1f | %s", name, price / 1000.0, description);
+    }
+
+
+    /**
+     * 아이템 이름
+     * @return String
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 아이템 가격
+     * @return int
+     */
+    public int getPrice() {
+        return price;
+    }
+
+    /**
+     * 아이템 설명
+     * @return String
+     */
+    public String getDescription() {
+        return description;
     }
 }

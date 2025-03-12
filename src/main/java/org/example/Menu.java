@@ -33,7 +33,7 @@ public class Menu {
             MenuItem item = menuItems.get(i);
             System.out.println(i + 1 + ". " + item.toString());
         }
-        System.out.println("0. 종료");
+        System.out.println("0. 뒤로가기");
     }
 
     /**
