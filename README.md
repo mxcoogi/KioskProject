@@ -10,6 +10,7 @@ ___
 - 사용자 입력에 따른 예외 처리와 조건 분기 연습
 - **lambda stream Enum을** 통해 프로그램 효율성과 가독성 개선
 
+[java doc](docs/org/example/Main.html)
 ___
 ### 필수기능
 ### LV1
