@@ -16,6 +16,7 @@ public class Kiosk{
     private List<Menu> menuList;
     private static Scanner scanner = new Scanner(System.in);
     private static Stack<Runnable> stack= new Stack<>();
+    private static String input;
 
     /**
      * 생성자<br>
@@ -59,13 +60,12 @@ public class Kiosk{
      * 키오스크 프로그램을 시작하는 메서드
      */
     public void start() {
+        stack.push(showMenuList());
         try {
             while(true){
-                int select;
-                select = showMenuList();
-                select = showMenuItems(select);
+                Runnable function = stack.pop();
+                function.run();
             }
-
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -80,52 +80,63 @@ public class Kiosk{
      * @throws NumberFormatException
      * @throws IndexOutOfBoundsException
      */
-    private int showMenuList() {
-        System.out.println("[ MAIN MENU ]");
-        for (int i = 0; i < menuList.size(); i++) {
-            System.out.println(i + 1 + ". " + menuList.get(i).getCategory());
-        }
-        System.out.println("0. 종료");
-        String input = scanner.nextLine();
-        int idx;
-        if (input.equals("0")) {
-            throw new RuntimeException("종료합니다");
-        } else {
-            try {
-                idx = Integer.parseInt(input);
-            } catch (NumberFormatException e) {
-                throw new NumberFormatException("잘못된 입력입니다!");
-            } catch (IndexOutOfBoundsException e) {
-                throw new IndexOutOfBoundsException("없는 메뉴입니다!");
+    private Runnable showMenuList() {
+        Runnable showMenuList = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("[ MAIN MENU ]");
+                for (int i = 0; i < menuList.size(); i++) {
+                    System.out.println(i + 1 + ". " + menuList.get(i).getCategory());
+                }
+                System.out.println("0. 종료");
+                input = scanner.nextLine();
+                if (input.equals("0")) {
+                    throw new RuntimeException("종료합니다");
+                } else {
+                    try {
+                        int idx = Integer.parseInt(input);
+                        stack.push(showMenuList());
+                        stack.push(showMenuItems());
+                    } catch (NumberFormatException e) {
+                        throw new NumberFormatException("잘못된 입력입니다!");
+                    } catch (IndexOutOfBoundsException e) {
+                        throw new IndexOutOfBoundsException("없는 메뉴입니다!");
+                    }
+                }
             }
-        }
-        return idx - 1;
+        };
+        return showMenuList;
     }
 
 
     /**
      * 선택한 메뉴 카테고리의 리스트를 보여주는 메서드
      *
-     * @param select 이전에 선택한 메뉴 카테고리의 번호를 파라미터로 받는다
-     * @return 메뉴의 아이템의 번호를 리턴한다
      */
-    private int showMenuItems(int select) {
-        Menu menu = menuList.get(select);
-        menu.showMenuItems();
-        String input = scanner.nextLine();
-        if (input.equals("0")) {
+    private Runnable showMenuItems() {
 
-        } else {
-            try {
-                int idx = Integer.parseInt(input);
-                System.out.println(menu.getMenuItems().get(idx - 1).toString());
-            } catch (NumberFormatException e) {
-                throw new NumberFormatException("잘못된 입력입니다!");
-            } catch (IndexOutOfBoundsException e) {
-                throw new IndexOutOfBoundsException("없는 메뉴입니다!");
+        Runnable showMenuItems = new Runnable() {
+            @Override
+            public void run() {
+                Menu menu = menuList.get(Integer.parseInt(input)-1);
+                menu.showMenuItems();
+                String temp = scanner.nextLine();
+                if (input.equals("0")) {
+
+                } else {
+                    try {
+                        int idx = Integer.parseInt(temp);
+                        System.out.println(menu.getMenuItems().get(idx - 1).toString());
+
+                    } catch (NumberFormatException e) {
+                        throw new NumberFormatException("잘못된 입력입니다!");
+                    } catch (IndexOutOfBoundsException e) {
+                        throw new IndexOutOfBoundsException("없는 메뉴입니다!");
+                    }
+                }
             }
-        }
-        return select;
+        };
+    return showMenuItems;
     }
 
 
