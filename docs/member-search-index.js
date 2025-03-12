@@ -1,1 +1,1 @@
-memberSearchIndex = [{"p":"org.example","c":"Main","l":"Main()","u":"%3Cinit%3E()"},{"p":"org.example","c":"Main","l":"main(String[])","u":"main(java.lang.String[])"}];updateSearchResults();
+memberSearchIndex = [{"p":"org.example","c":"Main","l":"Main()","u":"%3Cinit%3E()"},{"p":"org.example","c":"Main","l":"main(String[])","u":"main(java.lang.String[])"},{"p":"org.example","c":"MenuItem","l":"MenuItem(String, int, String)","u":"%3Cinit%3E(java.lang.String,int,java.lang.String)"},{"p":"org.example","c":"MenuItem","l":"toString()"}];updateSearchResults();
