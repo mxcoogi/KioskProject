@@ -4,7 +4,7 @@ package org.example;
 /**
  *
  * @author mxcoogi
- * @version challenge lv1
+ * @version challenge lv2
  *
  */
 public class Main {

@@ -5,7 +5,7 @@ package org.example;
  *
  *
  * @author mxcoogi
- * @version lv2
+ * @version challenge lv2
  */
 public class MenuItem {
     /**

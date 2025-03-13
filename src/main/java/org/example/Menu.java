@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
  * 예를 들어, 버거 메뉴, 음료 메뉴 등 각 카테고리 내에 여러 MenuItem을 포함합니다.
  *
  * @author mxcoogi
- * @version challenge lv1
+ * @version challenge lv2
  */
 public class Menu {
     private List<MenuItem> menuItems;

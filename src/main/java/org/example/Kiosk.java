@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
  * List에 MenuItem을 저장하고 있습니다.
  *
  * @author mxcoogi
- * @version challenge lv1
+ * @version challenge lv2
  */
 public class Kiosk {
     /**
@@ -62,6 +62,10 @@ public class Kiosk {
         menuList.add(dessert);
     }
 
+    /**
+     * @deprecated
+     * @return Kiosk Scanner 키오스크에서 쓰는 입력받기기능
+     */
     public static Scanner getScanner() {
         return scanner;
     }

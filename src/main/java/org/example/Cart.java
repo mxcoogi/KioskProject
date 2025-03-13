@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 /**
  * 장바구니 클래스<br>
  * @author mxcoogi
- * @version challenge lv1
+ * @version challenge lv2
  */
 public class Cart {
 
