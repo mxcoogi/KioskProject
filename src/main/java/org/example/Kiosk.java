@@ -1,16 +1,13 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * 키오스크 클래스로 사용자의 입력을 처리하고<br>
  * List에 MenuItem을 저장하고 있습니다.
  *
  * @author mxcoogi
- * @version thread Version
+ * @version challenge lv1
  */
 public class Kiosk {
     /**
@@ -20,6 +17,7 @@ public class Kiosk {
      * 명령어를 저장하는 input
      */
     private List<Menu> menuList;
+    private Cart cart;
     private static Scanner scanner = new Scanner(System.in);
     private static Stack<Runnable> stack = new Stack<>();
     private static String input;
@@ -32,6 +30,7 @@ public class Kiosk {
      */
     public Kiosk() {
         menuList = new ArrayList<>();
+        cart = new Cart();
         init();
     }
 
@@ -74,8 +73,10 @@ public class Kiosk {
                 Runnable function = stack.pop();
                 function.run();
             }
+        } catch (EmptyStackException e) {
+            System.out.println("종료합니다~");
         } catch (Exception e) {
-            System.out.println(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -90,6 +91,7 @@ public class Kiosk {
         return new Runnable() {
             @Override
             public void run() {
+                System.out.println("========== Restaurant ==========");
                 System.out.println("1. 메뉴   2. 장바구니   3. 주문하기   0. 종료");
                 try {
                     input = scanner.nextLine();
@@ -109,9 +111,7 @@ public class Kiosk {
                         case "0" -> {
 
                         }
-                        default -> {
-                            throw new NumberFormatException();
-                        }
+                        default -> throw new NumberFormatException();
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -127,8 +127,6 @@ public class Kiosk {
      * 메뉴 카테고리를 번호를 선택한다
      *
      * @return 선택한 메뉴 카테고리의 번호를 리턴
-     * @throws NumberFormatException
-     * @throws IndexOutOfBoundsException
      */
     private Runnable showMenuList() {
         return new Runnable() {
@@ -141,7 +139,6 @@ public class Kiosk {
                 System.out.println("0. 뒤로가기");
                 input = scanner.nextLine();
                 if (input.equals("0")) {
-
                 } else {
                     try {
                         stack.push(showMenuList());
@@ -196,15 +193,9 @@ public class Kiosk {
         System.out.println("1. 확인        2. 취소");
         String temp = scanner.nextLine();
         switch (temp) {
-            case "1" -> {
-                Cart.addMenuItem(menuItem);
-            }
-            case "2" -> {
-                System.out.println("취소합니다.");
-            }
-            default -> {
-                throw new NumberFormatException();
-            }
+            case "1" -> cart.addMenuItem(menuItem);
+            case "2" -> System.out.println("취소합니다.");
+            default -> throw new NumberFormatException();
         }
     }
 
@@ -218,7 +209,7 @@ public class Kiosk {
         return new Runnable() {
             @Override
             public void run() {
-                Cart.showCartList();
+                cart.showCartList();
             }
         };
     }
@@ -234,19 +225,13 @@ public class Kiosk {
             @Override
             public void run() {
                 try {
-                    Cart.showCartList();
+                    cart.showCartList();
                     System.out.println("1. 주문하기   0. 뒤로가기");
                     String temp = scanner.nextLine();
                     switch (temp) {
-                        case "1" -> {
-                            Cart.payOrder();
-                        }
-                        case "0" -> {
-
-                        }
-                        default -> {
-                            throw new Exception();
-                        }
+                        case "1" -> cart.payOrder();
+                        case "0" -> { }
+                        default -> throw new Exception();
                     }
                 } catch (Exception e) {
                     throw new RuntimeException(e);
