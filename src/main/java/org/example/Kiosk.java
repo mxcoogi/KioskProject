@@ -117,12 +117,11 @@ public class Kiosk {
                             stack.push(payOrder());
                         }
                         case "0" -> {
-
                         }
-                        default -> throw new NumberFormatException();
+                        default -> throw new InputMismatchException();
                     }
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw new NumberFormatException();
                 }
 
             }
@@ -173,7 +172,6 @@ public class Kiosk {
                 menu.showMenuItems();
                 String temp = scanner.nextLine();
                 if (temp.equals("0")) {
-
                 } else {
                     try {
                         int idx = Integer.parseInt(temp) - 1;
