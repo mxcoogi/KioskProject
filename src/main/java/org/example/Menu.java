@@ -8,7 +8,7 @@ import java.util.List;
  * 예를 들어, 버거 메뉴, 음료 메뉴 등 각 카테고리 내에 여러 MenuItem을 포함합니다.
  *
  * @author mxcoogi
- * @version lv4
+ * @version challenge lv1
  */
 public class Menu {
     private List<MenuItem> menuItems;

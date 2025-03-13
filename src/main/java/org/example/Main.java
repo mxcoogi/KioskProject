@@ -4,12 +4,11 @@ package org.example;
 /**
  *
  * @author mxcoogi
- * @version lv3
+ * @version challenge lv1
  *
  */
 public class Main {
     public static void main(String[] args){
-
         Kiosk kiosk = new Kiosk();
         kiosk.start();
 
