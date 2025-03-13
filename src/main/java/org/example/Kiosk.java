@@ -62,6 +62,9 @@ public class Kiosk {
         menuList.add(dessert);
     }
 
+    public static Scanner getScanner() {
+        return scanner;
+    }
 
     /**
      * 키오스크 프로그램을 시작하는 메서드

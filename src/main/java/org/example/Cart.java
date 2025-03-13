@@ -1,6 +1,9 @@
 package org.example;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.IntStream;
+
 /**
  * 장바구니 클래스<br>
  * @author mxcoogi
@@ -91,13 +94,40 @@ public class Cart {
             System.out.println("장바구니가 비어있습니다.");
             return ;
         }
-        int resultPrice = cartList.keySet().stream()
+        double resultPrice = cartList.keySet().stream()
                 .mapToInt(menuItem -> menuItem.getPrice() * cartList.get(menuItem))
                 .sum();
+        //할인 로직 적용해야댐
+        Double rate = disCount();
+        if(rate == null) return ;
+        resultPrice = resultPrice * rate;
         System.out.println("[ Total ]");
         System.out.printf("W %-5.1f\n", resultPrice / DIVPRICE);
         System.out.println("주문이 완료되었습니다. 금액은 W " + resultPrice / DIVPRICE + " 입니다.");
         clear();
+    }
+
+    /**
+     * 할인욥션 선택하고 할인율 반환
+     * @throws NumberFormatException;
+     * @throws IndexOutOfBoundsException;
+     * @return Double 할인율 반환
+     */
+    private Double disCount(){
+        System.out.println("할인 옵션을 선택 해 주세요");
+        DiscountTarget[] arr = DiscountTarget.values();
+        IntStream.range(0, arr.length)
+                .forEach(idx-> System.out.print(idx+1+". "+arr[idx].getTarget()+"   "));
+        System.out.println("0. 종료");
+        try{
+            int temp = Integer.parseInt(Kiosk.getScanner().nextLine());
+            if(temp==0) return null;
+            return arr[temp-1].getRate();
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(e);
+        }catch (IndexOutOfBoundsException e){
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     /**
