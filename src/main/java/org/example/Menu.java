@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * MenuItem 클래스를 관리하는 클래스입니다.<br>
@@ -25,14 +26,13 @@ public class Menu {
     }
 
     /**
-     * 이 카테고리에 해당하는 메뉴리스트를 보여줌
+     * 이 카테고리에 해당하는 메뉴아이템 리스트를 보여줌
+     * 스트림 사용
      */
     public void showMenuItems() {
         System.out.printf("[ %s MENU ]\n", category.toUpperCase());
-        for (int i = 0; i < menuItems.size(); i++) {
-            MenuItem item = menuItems.get(i);
-            System.out.println(i + 1 + ". " + item.toString());
-        }
+        IntStream.range(0, menuItems.size())
+                .forEach(idx -> System.out.println(idx + 1 + ". " + menuItems.get(idx).toString()));
         System.out.println("0. 뒤로가기");
     }
 

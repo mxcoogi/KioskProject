@@ -1,6 +1,9 @@
 package org.example;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.stream.IntStream;
+
 /**
  * 장바구니 클래스<br>
  * @author mxcoogi
@@ -24,25 +27,52 @@ public class Cart {
      * @param menuItem 을 인수로 받아 장바구니에 저장
      */
     public void addMenuItem(MenuItem menuItem){
-        if(this.cartList.containsKey(menuItem)){
-            this.cartList.put(menuItem, cartList.get(menuItem)+1);
-        }else{
-            this.cartList.put(menuItem, 1);
+        cartList.put(menuItem, cartList.getOrDefault(menuItem, 0)+1);
+    }
+
+    /**
+     * @deprecated
+     * @param menuItem 을 인수로 받아 장바구니에 있는지 확인하고 수량 제거
+     */
+    public void removeMenuItem(MenuItem menuItem){
+        Integer cnt = cartList.get(menuItem);
+        if(cnt == null) {
+            System.out.println("장바구니에 메뉴가 없습니다.");
+            return;
         }
+        if(cnt==1){
+            cartList.remove(menuItem);
+            System.out.println(menuItem.getName() + " 제거 완료");
+        }
+        else{
+            cartList.put(menuItem, cnt-1);
+            System.out.println(menuItem.getName() + "1개 제거 완료");
+        }
+
     }
 
     /**
      * 장바구니의 목록을 출력하는 메소드
+     * 스트림보다는  for문을 사용하는게 편할거 같아서 for문으로 유지
+     * -> 스트림 변경
      */
     public void showCartList(){
         System.out.printf("%-18s | %-4s |  %-5s%n", "상품명", "수량", "가격");
-        int resultPrice = 0;
+        /*int resultPrice = 0;
         for(MenuItem menuItem : this.cartList.keySet()){
             resultPrice += menuItem.getPrice() * cartList.get(menuItem);
             int countItem = cartList.get(menuItem);
             String format =String.format("%-20s | %-5d | W %-5.1f", menuItem.getName(), countItem, menuItem.getPrice()*countItem/DIVPRICE);
             System.out.println(format);
-        }
+        }*/
+        int resultPrice = cartList.keySet().stream()
+                .mapToInt(menuItem -> {
+                    int countItem = cartList.get(menuItem);
+                    String format =String.format("%-20s | %-5d | W %-5.1f", menuItem.getName(), countItem, menuItem.getPrice()*countItem/DIVPRICE);
+                    System.out.println(format);
+                    return menuItem.getPrice() * cartList.get(menuItem);
+                })
+                .sum();
         System.out.println();
         System.out.println("[ Total ]");
         System.out.printf("W %-5.1f\n", resultPrice / DIVPRICE);
@@ -64,16 +94,40 @@ public class Cart {
             System.out.println("장바구니가 비어있습니다.");
             return ;
         }
-
-        int resultPrice = 0;
-        for(MenuItem menuItem : cartList.keySet()){
-            resultPrice += menuItem.getPrice() * cartList.get(menuItem);
-        }
-
+        double resultPrice = cartList.keySet().stream()
+                .mapToInt(menuItem -> menuItem.getPrice() * cartList.get(menuItem))
+                .sum();
+        //할인 로직 적용해야댐
+        Double rate = disCount();
+        if(rate == null) return ;
+        resultPrice = resultPrice * rate;
         System.out.println("[ Total ]");
         System.out.printf("W %-5.1f\n", resultPrice / DIVPRICE);
         System.out.println("주문이 완료되었습니다. 금액은 W " + resultPrice / DIVPRICE + " 입니다.");
         clear();
+    }
+
+    /**
+     * 할인욥션 선택하고 할인율 반환
+     * @throws NumberFormatException;
+     * @throws IndexOutOfBoundsException;
+     * @return Double 할인율 반환
+     */
+    private Double disCount(){
+        System.out.println("할인 옵션을 선택 해 주세요");
+        DiscountTarget[] arr = DiscountTarget.values();
+        IntStream.range(0, arr.length)
+                .forEach(idx-> System.out.print(idx+1+". "+arr[idx].getTarget()+"   "));
+        System.out.println("0. 종료");
+        try{
+            int temp = Integer.parseInt(Kiosk.getScanner().nextLine());
+            if(temp==0) return null;
+            return arr[temp-1].getRate();
+        } catch (NumberFormatException e) {
+            throw new RuntimeException(e);
+        }catch (IndexOutOfBoundsException e){
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     /**

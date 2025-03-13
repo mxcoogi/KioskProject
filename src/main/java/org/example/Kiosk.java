@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 /**
  * 키오스크 클래스로 사용자의 입력을 처리하고<br>
@@ -61,6 +62,9 @@ public class Kiosk {
         menuList.add(dessert);
     }
 
+    public static Scanner getScanner() {
+        return scanner;
+    }
 
     /**
      * 키오스크 프로그램을 시작하는 메서드
@@ -133,9 +137,8 @@ public class Kiosk {
             @Override
             public void run() {
                 System.out.println("[ MAIN MENU ]");
-                for (int i = 0; i < menuList.size(); i++) {
-                    System.out.println(i + 1 + ". " + menuList.get(i).getCategory());
-                }
+                IntStream.range(0, menuList.size())
+                        .forEach(idx -> System.out.println(idx + 1 + ". " + menuList.get(idx).getCategory()));
                 System.out.println("0. 뒤로가기");
                 input = scanner.nextLine();
                 if (input.equals("0")) {
@@ -230,7 +233,7 @@ public class Kiosk {
                     String temp = scanner.nextLine();
                     switch (temp) {
                         case "1" -> cart.payOrder();
-                        case "0" -> { }
+                        case "0" -> {}
                         default -> throw new Exception();
                     }
                 } catch (Exception e) {
