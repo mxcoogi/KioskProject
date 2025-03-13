@@ -26,7 +26,7 @@ public class Menu {
     }
 
     /**
-     * 이 카테고리에 해당하는 메뉴리스트를 보여줌
+     * 이 카테고리에 해당하는 메뉴아이템 리스트를 보여줌
      * 스트림 사용
      */
     public void showMenuItems() {
