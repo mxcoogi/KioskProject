@@ -33,7 +33,7 @@ public class MenuItem {
      */
     @Override
     public String toString() {
-        return String.format("%-20s | W %-5.1f | %s", name, price / 1000.0, description);
+        return String.format("%-20s | W %-5.1f | %s", name, price / Cart.getDIVPRICE(), description);
     }
 
 

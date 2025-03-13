@@ -24,25 +24,24 @@ public class Cart {
      * @param menuItem 을 인수로 받아 장바구니에 저장
      */
     public void addMenuItem(MenuItem menuItem){
-        if(this.cartList.containsKey(menuItem)){
-            this.cartList.put(menuItem, cartList.get(menuItem)+1);
-        }else{
-            this.cartList.put(menuItem, 1);
-        }
+        cartList.put(menuItem, cartList.getOrDefault(menuItem, 0)+1);
     }
 
     /**
      * 장바구니의 목록을 출력하는 메소드
+     * 스트림보다는  for문을 사용하는게 편할거 같아서 for문으로 유지
      */
     public void showCartList(){
         System.out.printf("%-18s | %-4s |  %-5s%n", "상품명", "수량", "가격");
         int resultPrice = 0;
+
         for(MenuItem menuItem : this.cartList.keySet()){
             resultPrice += menuItem.getPrice() * cartList.get(menuItem);
             int countItem = cartList.get(menuItem);
             String format =String.format("%-20s | %-5d | W %-5.1f", menuItem.getName(), countItem, menuItem.getPrice()*countItem/DIVPRICE);
             System.out.println(format);
         }
+
         System.out.println();
         System.out.println("[ Total ]");
         System.out.printf("W %-5.1f\n", resultPrice / DIVPRICE);
@@ -64,12 +63,9 @@ public class Cart {
             System.out.println("장바구니가 비어있습니다.");
             return ;
         }
-
-        int resultPrice = 0;
-        for(MenuItem menuItem : cartList.keySet()){
-            resultPrice += menuItem.getPrice() * cartList.get(menuItem);
-        }
-
+        int resultPrice = cartList.keySet().stream()
+                .mapToInt(menuItem -> menuItem.getPrice() * cartList.get(menuItem))
+                .sum();
         System.out.println("[ Total ]");
         System.out.printf("W %-5.1f\n", resultPrice / DIVPRICE);
         System.out.println("주문이 완료되었습니다. 금액은 W " + resultPrice / DIVPRICE + " 입니다.");
